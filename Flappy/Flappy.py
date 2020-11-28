@@ -7,6 +7,10 @@ pygame.init()
 clock = pygame.time.Clock()
 fps = 60
 
+font = pygame.font.SysFont('Bauhaus 93',60)
+
+white = (255,255,255)
+
 screen_width = 864
 screen_height = 936
 
@@ -21,11 +25,17 @@ gameover = False
 pipe_gap = 150
 pipe_frequency = 1500 #milliseconds
 last_pipe = pygame.time.get_ticks() - pipe_frequency
+score = 0
+xcor = 300
 
 
 #load images
 bg = pygame.image.load("img/bg.png")
 ground_image = pygame.image.load("img/ground.png")
+
+def draw_text(text, font, text_col, x,y):
+    img = font.render(text,True,text_col)
+    screen.blit(img,(x,y))
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -74,8 +84,10 @@ class Bird(pygame.sprite.Sprite):
 class Pipe(pygame.sprite.Sprite):
     def __init__(self,x,y,position):
         pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.LayeredUpdates.__init__(self)
         self.image = pygame.image.load("img/pipe.png")
         self.rect = self.image.get_rect()
+        global score
         #position 1 is top -1 is bottom
         if position == 1:
             self.image = pygame.transform.flip(self.image, False, True)
@@ -83,10 +95,12 @@ class Pipe(pygame.sprite.Sprite):
         if position == -1:
             self.rect.topleft = [x,y + int(pipe_gap / 2)]
     def update(self):
+        global score
         self.rect.x -= scroll_speed
         if self.rect.right < 0:
             self.kill()
-
+        elif self.rect.x == 100:
+            score += .5
 
 
 bird_group = pygame.sprite.Group()
@@ -113,8 +127,12 @@ while run:
 
     screen.blit(ground_image,(ground_scroll, 768))
 
+    #score
+
     if gameover == False and flying == True:
         pipe_group.update()
+        print(pipe_group)
+
         #generate new pipes
         time_now = pygame.time.get_ticks()
         if time_now - last_pipe > pipe_frequency:
@@ -124,13 +142,16 @@ while run:
             pipe_group.add(btm_pipe)
             pipe_group.add(top_pipe)
             last_pipe = time_now
+            
         ground_scroll -= scroll_speed
         if abs(ground_scroll) > 35:
             ground_scroll = 0
+    
+    draw_text(str(int(score)),font,white,int(screen_width/2),80)
     #look for collision
+
     if pygame.sprite.groupcollide(bird_group,pipe_group, False, False) or flappy.rect.top <0:
         gameover = True
-
 
 
     #checks if bird hits the bottom
