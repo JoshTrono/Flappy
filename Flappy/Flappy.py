@@ -1,6 +1,9 @@
 import pygame
 import random
+import time
 import tkinter as tk
+import ast
+import json
 from pygame.locals import *
 
 pygame.init()
@@ -18,6 +21,8 @@ screen_height = 936
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Flappy Bird")
 #Scorelist
+with open("scores.txt","r") as data:
+    scores = ast.literal_eval(data.read())
 
 
 #Add the popup
@@ -27,28 +32,41 @@ root.title('Program Selection')
 canvas1=tk.Canvas(root,width =300, height=150)
 canvas1.pack()
  
+
+def prog2():
+    sortedItems = sorted(scores.items())
+    canvas3=tk.Canvas(root,width = 300, height = 150)
+    canvas3.pack()
+    text = tk.Label(canvas3,text="{}\n{}\n{}\n{}\n{}".format(sortedItems[0],sortedItems[1],sortedItems[2],sortedItems[3],sortedItems[4]))
+    canvas3.create_window(150,40,window = text)
+    return
  
 def prog():
     x = entry.get()
-    print(x)
+    canvas2 = tk.Canvas(root, width = 300,height= 150)
+    canvas2.pack()
+    text = tk.Label(canvas2,text="{} Your score is {}".format(x, score))
+    canvas2.create_window(150,60,window=text)
+    root.mainloop
+    
+    scores['{}'.format(x)] = score
+    clock.wait(1500)
+    with open('scores.txt', 'w') as file:
+        file.write(json.dumps(scores))
+    prog2()
     return
  
-def prog2():
-    print("test2")
-    return
 
-labelTop=tk.Label(canvas1,text='Choose a program')
+labelTop=tk.Label(canvas1,text='Enter your name')
 canvas1.create_window(150,20,window=labelTop)
 
 entry = tk.Entry(canvas1)
 canvas1.create_window(150,50,window = entry)
-button1=tk.Button(text='program1',command = prog)
+button1=tk.Button(text='submit',command = prog)
 canvas1.create_window(150,75,window=button1)
  
-button2=tk.Button(text='program2',command=prog2)
+button2=tk.Button(text='Scorelist',command=prog2)
 canvas1.create_window(150,110,window=button2)
-
-
 
 
 #Define variables
