@@ -1,5 +1,6 @@
 import pygame
 import random
+import tkinter as tk
 from pygame.locals import *
 
 pygame.init()
@@ -16,6 +17,30 @@ screen_height = 936
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Flappy Bird")
+#Add the popup
+
+root=tk.Tk()
+root.title('Program Selection')
+canvas1=tk.Canvas(root,width =300, height=150)
+canvas1.pack()
+ 
+ 
+def prog():
+    print("Test1")
+    return
+ 
+def prog2():
+    print("test2")
+    return
+ 
+labelTop=tk.Label(canvas1,text='Choose a program')
+canvas1.create_window(150,40,window=labelTop)
+ 
+button1=tk.Button(text='program1',command = prog)
+canvas1.create_window(150,75,window=button1)
+ 
+button2=tk.Button(text='program2',command=prog2)
+canvas1.create_window(150,110,window=button2)
 
 #Define variables
 ground_scroll = 0
@@ -32,10 +57,37 @@ xcor = 300
 #load images
 bg = pygame.image.load("img/bg.png")
 ground_image = pygame.image.load("img/ground.png")
+imgreset = pygame.image.load("img/restart.png")
+scorebtn = pygame.image.load("img/score.png")
+
 
 def draw_text(text, font, text_col, x,y):
     img = font.render(text,True,text_col)
     screen.blit(img,(x,y))
+def reset():
+    pipe_group.empty()
+    score = 0
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_height/2)
+    
+
+class Buttons():
+    def __init__(self,x,y,image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+    def draw(self):
+        action = False
+        #Mouse position
+        pos = pygame.mouse.get_pos()
+        #Check if pressed
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                action = True
+                return action
+        screen.blit(self.image,(self.rect.x,self.rect.y))
+
+
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -109,7 +161,8 @@ pipe_group = pygame.sprite.Group()
 flappy = Bird(100, int(screen_height / 2))
 bird_group.add(flappy)
 
-
+button = Buttons(100,100,imgreset)
+btnscore = Buttons(600,100,scorebtn)
 
 run = True
 while run:
@@ -131,7 +184,7 @@ while run:
 
     if gameover == False and flying == True:
         pipe_group.update()
-        print(pipe_group)
+     #   print(pipe_group)
 
         #generate new pipes
         time_now = pygame.time.get_ticks()
@@ -160,7 +213,12 @@ while run:
         flying = False
 
 
-    #draw and scroll the ground
+    if gameover == True:
+        if btnscore.draw() == True:
+            root.mainloop()
+        if button.draw() == True:
+            gameover = False
+            reset()
  
 
     for event in pygame.event.get():
