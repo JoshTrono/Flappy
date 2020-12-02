@@ -17,6 +17,9 @@ screen_height = 936
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Flappy Bird")
+#Scorelist
+
+
 #Add the popup
 
 root=tk.Tk()
@@ -26,21 +29,27 @@ canvas1.pack()
  
  
 def prog():
-    print("Test1")
+    x = entry.get()
+    print(x)
     return
  
 def prog2():
     print("test2")
     return
- 
+
 labelTop=tk.Label(canvas1,text='Choose a program')
-canvas1.create_window(150,40,window=labelTop)
- 
+canvas1.create_window(150,20,window=labelTop)
+
+entry = tk.Entry(canvas1)
+canvas1.create_window(150,50,window = entry)
 button1=tk.Button(text='program1',command = prog)
 canvas1.create_window(150,75,window=button1)
  
 button2=tk.Button(text='program2',command=prog2)
 canvas1.create_window(150,110,window=button2)
+
+
+
 
 #Define variables
 ground_scroll = 0
