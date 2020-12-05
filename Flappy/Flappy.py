@@ -54,11 +54,11 @@ canvas1.pack()
     #Write your score onto file
     #calls prog2
 def prog2():
-    sortedItems = sorted(scores.items())
+    sortedItems = sorted(scores.items(),key = lambda kv: kv[1], reverse = True)
     canvas3=tk.Canvas(root,width = 300, height = 150)
     canvas3.pack()
-    text = tk.Label(canvas3,text="{}\n{}\n{}\n{}\n{}".format(sortedItems[0],sortedItems[1],sortedItems[2],sortedItems[3],sortedItems[4]))
-    canvas3.create_window(150,40,window = text)
+    text = tk.Label(canvas3,text="{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}".format(sortedItems[0],sortedItems[1],sortedItems[2],sortedItems[3],sortedItems[4],sortedItems[5],sortedItems[6],sortedItems[7],sortedItems[8],sortedItems[9]))
+    canvas3.create_window(150,60,window = text)
     return
  
 def prog():
