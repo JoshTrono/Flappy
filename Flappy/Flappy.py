@@ -1,16 +1,24 @@
+#Joshua Trono
+#Student ID 597503
+#import pygame,random,tkinter,ast,json
+#ast to convert a text file into a dictionary and json to convert a dictionary into a text file for the scores
+
+
+
+
+
 import pygame
 import random
-import time
 import tkinter as tk
 import ast
 import json
 from pygame.locals import *
 
 pygame.init()
-
+#Time
 clock = pygame.time.Clock()
 fps = 60
-
+#adding font
 font = pygame.font.SysFont('Bauhaus 93',60)
 
 white = (255,255,255)
@@ -32,7 +40,19 @@ root.title('Program Selection')
 canvas1=tk.Canvas(root,width =300, height=150)
 canvas1.pack()
  
-
+#Def prog2
+    #sortedItems = sorted(scores.items())
+    #canvas3=tk.Canvas(root,screen width = 300, height = 150)
+    #canvas3.pack()
+    #Text will be the first 5 items in the sorted scorelist
+# def prog()
+    #x = entry.get which gets the entry from the text field
+    #canvas2 = tk.canvas
+    #Canvas2.pack()
+    #text= displays your score
+    #create a new windows showing the text
+    #Write your score onto file
+    #calls prog2
 def prog2():
     sortedItems = sorted(scores.items())
     canvas3=tk.Canvas(root,width = 300, height = 150)
@@ -50,7 +70,7 @@ def prog():
     root.mainloop
     
     scores['{}'.format(x)] = score
-    clock.wait(1500)
+  #  clock.wait(1500)
     with open('scores.txt', 'w') as file:
         file.write(json.dumps(scores))
     prog2()
@@ -87,7 +107,14 @@ ground_image = pygame.image.load("img/ground.png")
 imgreset = pygame.image.load("img/restart.png")
 scorebtn = pygame.image.load("img/score.png")
 
+#draw_text(text,font,text color,x,y)
+    #img = font.render(text,True,text color)
+    #screen.blit(img,(x,y)) #To display the text
 
+#Def Reset()
+    #pipe_group.empty #Removes the pipes
+    #score Resets
+    #places the character back
 def draw_text(text, font, text_col, x,y):
     img = font.render(text,True,text_col)
     screen.blit(img,(x,y))
@@ -97,7 +124,20 @@ def reset():
     flappy.rect.x = 100
     flappy.rect.y = int(screen_height/2)
     
+#Class Buttons
+    #Init self with x,y and an image variable
+        #self.image = image
+        #self.rect = self.image.get_rect()
+        #self.rect.topleft = (x,y) to place the topleft of the image to be where the x,y position is
+    #def draw(self)
+        #action = False #for the button action to be False unless pressed
 
+        #pos = pygame.mouse.get_pos() to display if the mouse is over the button
+        #if self.rect.collidepoint(pos): # IF the mouse pos is over the button
+            #if pygame.mouse.get_pressed()[0] == 1 THAN: if left button gets clicked
+                #action = True
+                # return action which is true
+        #screen.blit to draw the button
 class Buttons():
     def __init__(self,x,y,image):
         self.image = image
@@ -114,7 +154,27 @@ class Buttons():
                 return action
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
-
+#Class bird(pygame.Sprite.Sprite)
+    #init(self,x,y)
+        #pygame.sprite.Sprite.__init__(self) to make a pygame sprite
+        # self.images = []
+        #self.index = 0
+        #self.counter = 0 
+        #for num in range(1,4):
+            #img = pygame.image.load(f'img/bird{num}.png')
+            #self.images.append(img)
+       #self.image = self.images[self.index]
+       #self.rect = self.image.get_rect()
+       #self.center = [x,y]
+       #self.vel = 0 for the velacity
+       #self.clicked = False
+    #def update(self):
+          #if flying == True:
+          #  self.vel += 0.5
+          #  if self.vel >8:
+          #      self.vel = 8
+          #  if self.rect.bottom < 768:
+          #      self.rect.y += int(self.vel)
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -199,7 +259,7 @@ while run:
     screen.blit(bg, (0,0))
 
     bird_group.draw(screen)
-    bird_group.update()
+    bird_group.update() # update Every time
 
     pipe_group.draw(screen)
    
@@ -210,12 +270,12 @@ while run:
     #score
 
     if gameover == False and flying == True:
-        pipe_group.update()
+        pipe_group.update() # update the pipes only if your flying
      #   print(pipe_group)
 
         #generate new pipes
         time_now = pygame.time.get_ticks()
-        if time_now - last_pipe > pipe_frequency:
+        if time_now - last_pipe > pipe_frequency: # if the timenow - when the last pipe got made is greater than the frequency Than make another pipe with a pipe gap.
             pipe_height = random.randint(-100,100)
             btm_pipe = Pipe(screen_width, int(screen_height /2) + pipe_height,-1)
             top_pipe = Pipe(screen_width,int(screen_height/2) + pipe_height,1)
@@ -230,8 +290,10 @@ while run:
     draw_text(str(int(score)),font,white,int(screen_width/2),80)
     #look for collision
 
+    #if sprites collide or flappy is above the screen than its game over
+
     if pygame.sprite.groupcollide(bird_group,pipe_group, False, False) or flappy.rect.top <0:
-        gameover = True
+        gameover = True 
 
 
     #checks if bird hits the bottom
@@ -240,7 +302,7 @@ while run:
         flying = False
 
 
-    if gameover == True:
+    if gameover == True: #if gameover than display both buttons
         if btnscore.draw() == True:
             root.mainloop()
         if button.draw() == True:
