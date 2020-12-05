@@ -15,6 +15,12 @@ import json
 from pygame.locals import *
 
 pygame.init()
+pygame.mixer.init()
+#Audio
+pygame.mixer.music.load("audio/airtone_-_reCreation.mp3")
+pygame.mixer.music.play(-1, 0.0)
+pygame.mixer.music.set_volume(0.03)
+
 #Time
 clock = pygame.time.Clock()
 fps = 60
